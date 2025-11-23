@@ -16,6 +16,7 @@ const categories = [
 
 const HomePage = () => {
 	const { fetchFeaturedProducts, products, isLoading } = useProductStore();
+	
 
 	useEffect(() => {
 		fetchFeaturedProducts();
