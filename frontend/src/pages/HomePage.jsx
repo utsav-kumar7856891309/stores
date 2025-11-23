@@ -5,13 +5,13 @@ import { useProductStore } from "../stores/useProductStore";
 import FeaturedProducts from "../components/FeaturedProducts";
 
 const categories = [
-	{ href: "/Jeans", name: "Jeans", imageUrl: "/jeans.jpg" },
-	{ href: "/T-shirts", name: "T-shirts", imageUrl: "/tshirts.jpg" },
-	{ href: "/Shoes", name: "Shoes", imageUrl: "/shoes.jpg" },
-	{ href: "/Glasses", name: "Glasses", imageUrl: "/glasses.png" },
-	{ href: "/Jackets", name: "Jackets", imageUrl: "/jackets.jpg" },
-	{ href: "/Suits", name: "Suits", imageUrl: "/suits.jpg" },
-	{ href: "/Bags", name: "Bags", imageUrl: "/bags.jpg" },
+	{ href: "/freeze", name: "freeze", imageUrl: "/refrigerator.jpg.avif" },
+	{ href: "/cooler", name: "cooler", imageUrl: "/cooler.jpg.webp" },
+	{ href: "/AC", name: "AC", imageUrl: "/ac.jpg.webp" },
+	{ href: "/fan", name: "fan", imageUrl: "/fan.jpg.webp" },
+	{ href: "/wires", name: "wires", imageUrl: "/wire.jpg.jpg" },
+	{ href: "/cables", name: "cables", imageUrl: "/wires.jpg.webp" },
+	{ href: "/tv", name: "tv", imageUrl: "/tv.jpg.webp" },
 ];
 
 const HomePage = () => {
@@ -28,7 +28,7 @@ const HomePage = () => {
 					Explore Our Categories
 				</h1>
 				<p className='text-center text-xl text-gray-300 mb-12'>
-					Discover the latest trends in eco-friendly fashion
+					Discover the latest trends in electric-items
 				</p>
 
 				<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4'>
