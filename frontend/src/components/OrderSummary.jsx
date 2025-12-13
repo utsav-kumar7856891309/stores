@@ -10,22 +10,20 @@ const OrderSummary = () => {
 
   const savings = subtotal - total;
 
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
+  const loadRazorpayScript = () =>
+    new Promise((resolve) => {
       if (window.Razorpay) return resolve(true);
-
       const script = document.createElement("script");
       script.src = "https://checkout.razorpay.com/v1/checkout.js";
       script.onload = () => resolve(true);
       script.onerror = () => resolve(false);
       document.body.appendChild(script);
     });
-  };
 
   const handleRazorpayPayment = async () => {
     try {
       const { data } = await axios.post(
-        "/payments/create-checkout-order",
+        "/payments/create-checkout-session",
         {
           products: cart,
           couponCode: coupon ? coupon.code : null,
@@ -33,10 +31,7 @@ const OrderSummary = () => {
       );
 
       const loaded = await loadRazorpayScript();
-      if (!loaded) {
-        alert("Razorpay SDK failed to load");
-        return;
-      }
+      if (!loaded) return alert("Razorpay SDK failed to load");
 
       const options = {
         key: data.key,
@@ -46,26 +41,22 @@ const OrderSummary = () => {
         name: "My Store",
         description: "Order Payment",
 
-        handler: async function (response) {
-          try {
-            const verifyRes = await axios.post(
-              "/payments/checkout-success",
-              {
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                products: cart,
-                couponCode: coupon ? coupon.code : null,
-              }
-            );
-
-            if (verifyRes.data.success) {
-              navigate("/checkout-success");
-            } else {
-              alert("Payment verification failed");
+        handler: async (response) => {
+          const verifyRes = await axios.post(
+            "/payments/checkout-success",
+            {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              products: cart,
+              couponCode: coupon ? coupon.code : null,
             }
-          } catch {
-            alert("Payment verification error");
+          );
+
+          if (verifyRes.data.success) {
+            navigate("/checkout-success");
+          } else {
+            alert("Payment verification failed");
           }
         },
 
@@ -73,14 +64,9 @@ const OrderSummary = () => {
       };
 
       const rzp = new window.Razorpay(options);
-
-      rzp.on("payment.failed", function (response) {
-        alert(response.error.description);
-      });
-
       rzp.open();
-    } catch (error) {
-      console.error("Razorpay error:", error);
+    } catch (err) {
+      console.error("Razorpay error:", err);
       alert("Payment initialization failed");
     }
   };
@@ -90,7 +76,6 @@ const OrderSummary = () => {
       className="space-y-4 rounded-lg border border-gray-700 bg-gray-800 p-4 shadow-sm sm:p-6"
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
     >
       <p className="text-xl font-semibold text-emerald-400">Order summary</p>
 
@@ -124,8 +109,6 @@ const OrderSummary = () => {
         <motion.button
           onClick={handleRazorpayPayment}
           className="w-full rounded-lg bg-emerald-600 px-5 py-2.5 text-white hover:bg-emerald-700"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
         >
           Proceed to Checkout
         </motion.button>
@@ -142,4 +125,5 @@ const OrderSummary = () => {
 };
 
 export default OrderSummary;
+
 
