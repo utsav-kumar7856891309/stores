@@ -1,6 +1,9 @@
-// import Stripe from "stripe";
-// import dotenv from "dotenv";
+import Razorpay from "razorpay";
+import dotenv from "dotenv";
 
-// dotenv.config();
+dotenv.config();
 
-// export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+const razorpay = new Razorpay({
+	key_id: process.env.RAZORPAY_KEY_ID,
+	key_secret: process.env.RAZORPAY_KEY_SECRET,
+});
