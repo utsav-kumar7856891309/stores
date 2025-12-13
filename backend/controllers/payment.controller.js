@@ -1,12 +1,13 @@
 import Razorpay from "razorpay";
 import crypto from "crypto";
-import dotenv from "dotenv";
 import mongoose from "mongoose";
 import Coupon from "../models/coupon.model.js";
 import Order from "../models/order.model.js";
 import Product from "../models/product.model.js";
 
-dotenv.config();
+if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) {
+  throw new Error("Razorpay environment variables are missing");
+}
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -17,27 +18,24 @@ export const createCheckoutOrder = async (req, res) => {
   try {
     const { products: clientProducts, couponCode } = req.body;
 
-    if (!clientProducts || !Array.isArray(clientProducts) || clientProducts.length === 0) {
+    if (!Array.isArray(clientProducts) || clientProducts.length === 0) {
       return res.status(400).json({ message: "Invalid products data" });
     }
 
     const productIds = clientProducts.map((p) => p._id);
     const dbProducts = await Product.find({ _id: { $in: productIds } });
 
-    if (!dbProducts || dbProducts.length === 0) {
-      return res.status(400).json({ message: "No products found" });
+    if (dbProducts.length !== clientProducts.length) {
+      return res.status(400).json({ message: "Product mismatch detected" });
     }
 
     let totalAmount = 0;
-    const productsToOrder = clientProducts.map((p) => {
-      const product = dbProducts.find((dbP) => dbP._id.toString() === p._id);
-      if (!product) throw new Error("Product not found in DB");
-      totalAmount += product.price * p.quantity * 100;
-      return {
-        product: product._id,
-        quantity: p.quantity,
-        price: product.price,
-      };
+
+    clientProducts.forEach((item) => {
+      const dbProduct = dbProducts.find(
+        (p) => p._id.toString() === item._id
+      );
+      totalAmount += dbProduct.price * item.quantity * 100;
     });
 
     let coupon = null;
@@ -47,8 +45,11 @@ export const createCheckoutOrder = async (req, res) => {
         userId: req.user._id,
         isActive: true,
       });
+
       if (coupon) {
-        totalAmount -= Math.round((totalAmount * coupon.discountPercentage) / 100);
+        totalAmount -= Math.round(
+          (totalAmount * coupon.discountPercentage) / 100
+        );
       }
     }
 
@@ -58,16 +59,14 @@ export const createCheckoutOrder = async (req, res) => {
       receipt: `receipt_${Date.now()}`,
     });
 
-    res.status(200).json({
+    res.json({
       success: true,
       orderId: order.id,
       amount: order.amount,
-      currency: order.currency,
       key: process.env.RAZORPAY_KEY_ID,
       couponApplied: coupon ? coupon.code : null,
     });
   } catch (error) {
-    console.error("Create order error:", error);
     res.status(500).json({ message: "Failed to create order" });
   }
 };
@@ -75,8 +74,15 @@ export const createCheckoutOrder = async (req, res) => {
 export const verifyPayment = async (req, res) => {
   const session = await mongoose.startSession();
   session.startTransaction();
+
   try {
-    const { razorpay_order_id, razorpay_payment_id, razorpay_signature, products: clientProducts, couponCode } = req.body;
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+      products: clientProducts,
+      couponCode,
+    } = req.body;
 
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -85,40 +91,57 @@ export const verifyPayment = async (req, res) => {
 
     if (expectedSignature !== razorpay_signature) {
       await session.abortTransaction();
-      session.endSession();
-      return res.status(400).json({ success: false, message: "Invalid payment signature" });
+      return res.status(400).json({ message: "Invalid payment signature" });
+    }
+
+    const existingOrder = await Order.findOne(
+      { razorpayPaymentId: razorpay_payment_id },
+      null,
+      { session }
+    );
+
+    if (existingOrder) {
+      await session.commitTransaction();
+      return res.json({
+        success: true,
+        message: "Order already processed",
+        orderId: existingOrder._id,
+      });
     }
 
     const productIds = clientProducts.map((p) => p._id);
-    const dbProducts = await Product.find({ _id: { $in: productIds } });
-
-    if (!dbProducts || dbProducts.length === 0) {
-      await session.abortTransaction();
-      session.endSession();
-      return res.status(400).json({ message: "No products found" });
-    }
+    const dbProducts = await Product.find(
+      { _id: { $in: productIds } },
+      null,
+      { session }
+    );
 
     let totalAmount = 0;
-    const productsToOrder = clientProducts.map((p) => {
-      const product = dbProducts.find((dbP) => dbP._id.toString() === p._id);
-      if (!product) throw new Error("Product not found in DB");
-      totalAmount += product.price * p.quantity * 100;
+    const productsToOrder = clientProducts.map((item) => {
+      const dbProduct = dbProducts.find(
+        (p) => p._id.toString() === item._id
+      );
+      totalAmount += dbProduct.price * item.quantity * 100;
+
       return {
-        product: product._id,
-        quantity: p.quantity,
-        price: product.price,
+        product: dbProduct._id,
+        quantity: item.quantity,
+        price: dbProduct.price,
       };
     });
 
-    const newOrder = new Order({
-      user: req.user._id,
-      products: productsToOrder,
-      totalAmount: totalAmount / 100,
-      razorpayOrderId: razorpay_order_id,
-      razorpayPaymentId: razorpay_payment_id,
-    });
-
-    await newOrder.save({ session });
+    const newOrder = await Order.create(
+      [
+        {
+          user: req.user._id,
+          products: productsToOrder,
+          totalAmount: totalAmount / 100,
+          razorpayOrderId: razorpay_order_id,
+          razorpayPaymentId: razorpay_payment_id,
+        },
+      ],
+      { session }
+    );
 
     if (couponCode) {
       await Coupon.findOneAndUpdate(
@@ -133,36 +156,31 @@ export const verifyPayment = async (req, res) => {
     }
 
     await session.commitTransaction();
-    session.endSession();
 
-    res.status(200).json({
+    res.json({
       success: true,
       message: "Payment verified & order placed successfully",
-      orderId: newOrder._id,
+      orderId: newOrder[0]._id,
     });
   } catch (error) {
     await session.abortTransaction();
-    session.endSession();
-    console.error("Verify payment error:", error);
     res.status(500).json({ message: "Payment verification failed" });
+  } finally {
+    session.endSession();
   }
 };
 
 async function createNewCoupon(userId, session) {
-  try {
-    await Coupon.findOneAndDelete({ userId }, { session });
+  await Coupon.findOneAndDelete({ userId }, { session });
 
-    const newCoupon = new Coupon({
-      code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
-      discountPercentage: 10,
-      expirationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-      userId,
-      isActive: true,
-    });
+  const newCoupon = new Coupon({
+    code: "GIFT" + Math.random().toString(36).substring(2, 8).toUpperCase(),
+    discountPercentage: 10,
+    expirationDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    userId,
+    isActive: true,
+  });
 
-    await newCoupon.save({ session });
-    return newCoupon;
-  } catch (error) {
-    console.error("Create coupon error:", error);
-  }
+  await newCoupon.save({ session });
 }
+
