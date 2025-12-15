@@ -1,34 +1,39 @@
-import React from 'react';
-import { Navigate, Route, Routes } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import SignUpPage from "./pages/SignUpPage";
 import LoginPage from "./pages/LoginPage";
 import AdminPage from "./pages/AdminPage";
 import CategoryPage from "./pages/CategoryPage";
-
-import Navbar from "./components/Navbar";
-import { Toaster } from "react-hot-toast";
-import { useUserStore } from "./stores/useUserStore";
-import { useEffect } from "react";
-import LoadingSpinner from "./components/LoadingSpinner";
 import CartPage from "./pages/CartPage";
-import { useCartStore } from "./stores/useCartStore";
 import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
 import PurchaseCancelPage from "./pages/PurchaseCancelPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
-import ContactPage from './pages/ContactPage';
-import ProfilePage from './pages/ProfilePage';
+import ContactPage from "./pages/ContactPage";
+import ProfilePage from "./pages/ProfilePage";
+
+import ForgotPasswordPage from "./pages/ForgotPassword.jsx";
+import ResetPasswordPage from "./pages/ResetPassword.jsx";
+
+import Navbar from "./components/Navbar";
+import LoadingSpinner from "./components/LoadingSpinner";
+import { Toaster } from "react-hot-toast";
+
+import { useUserStore } from "./stores/useUserStore";
+import { useCartStore } from "./stores/useCartStore";
+
 function App() {
 	const { user, checkAuth, checkingAuth } = useUserStore();
 	const { getCartItems } = useCartStore();
+	const location = useLocation();
+
 	useEffect(() => {
 		checkAuth();
 	}, [checkAuth]);
 
 	useEffect(() => {
 		if (!user) return;
-
 		getCartItems();
 	}, [getCartItems, user]);
 
@@ -45,36 +50,76 @@ function App() {
 
 			<div className='relative z-50 pt-20'>
 				<Navbar />
+
 				<Routes>
 					<Route path='/' element={<HomePage />} />
-					<Route path='/signup' element={!user ? <SignUpPage /> : <Navigate to='/' />} />
-					<Route path='/login' element={!user ? <LoginPage /> : <Navigate to='/' />} />
+
+					<Route
+						path='/signup'
+						element={!user ? <SignUpPage /> : <Navigate to='/' />}
+					/>
+
+					<Route
+						path='/login'
+						element={!user ? <LoginPage /> : <Navigate to='/' />}
+					/>
+
+					<Route
+						path='/forgot-password'
+						element={!user ? <ForgotPasswordPage /> : <Navigate to='/' />}
+					/>
+
 					
+					<Route
+						path='/reset-password'
+						element={
+							!user && location.state?.email ? (
+								<ResetPasswordPage />
+							) : (
+								<Navigate to='/forgot-password' />
+							)
+						}
+					/>
+
 					<Route
 						path='/secret-dashboard'
 						element={user?.role === "admin" ? <AdminPage /> : <Navigate to='/login' />}
 					/>
+
 					<Route path='/category/:category' element={<CategoryPage />} />
-					<Route path='/cart' element={user ? <CartPage /> : <Navigate to='/login' />} />
+
 					<Route
-							path='/profile'
-							element={user ? <ProfilePage /> : <Navigate to='/login' />}
-						/>
+						path='/cart'
+						element={user ? <CartPage /> : <Navigate to='/login' />}
+					/>
+
+					<Route
+						path='/profile'
+						element={user ? <ProfilePage /> : <Navigate to='/login' />}
+					/>
+
 					<Route
 						path='/purchase-success'
 						element={user ? <PurchaseSuccessPage /> : <Navigate to='/login' />}
 					/>
-					<Route path='/purchase-cancel' element={user ? <PurchaseCancelPage /> : <Navigate to='/login' />} />
+
 					<Route
-							path='/contact'
-							element={user ? <ContactPage /> : <Navigate to='/login' />}
-						/>
-					<Route path="/checkout-success" element={<CheckoutSuccess />} />
+						path='/purchase-cancel'
+						element={user ? <PurchaseCancelPage /> : <Navigate to='/login' />}
+					/>
+
+					<Route
+						path='/contact'
+						element={user ? <ContactPage /> : <Navigate to='/login' />}
+					/>
+
+					<Route path='/checkout-success' element={<CheckoutSuccess />} />
 				</Routes>
 			</div>
+
 			<Toaster />
 		</div>
 	);
 }
-
 export default App;
+

@@ -21,7 +21,9 @@ import {
 	refreshToken,
 	getProfile,
 	updateProfile,
-	updatePassword,  // ✅ ADD THIS
+	updatePassword,
+	sendOTP,
+	resetPasswordWithOTP, 
 	ADMIN,
 } from "../controllers/auth.controller.js";
 
@@ -34,11 +36,12 @@ router.post("/logout", logout);
 router.get("/profile", protectRoute, getProfile);
 router.put("/profile", protectRoute, updateProfile);
 
-// ✅ ADD THIS ROUTE
+
 router.put("/change-password", protectRoute, updatePassword);
 
 router.post("/refresh-token", refreshToken);
-
+router.post("/send-otp", sendOTP);
+router.post("/reset-password-with-otp", resetPasswordWithOTP);
 // Optional admin seed
 router.post("/user/admin", ADMIN);
 

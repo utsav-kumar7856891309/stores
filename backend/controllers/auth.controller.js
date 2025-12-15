@@ -1,8 +1,9 @@
 import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { redis } from "../lib/redis.js";
+import sendEmail from "../lib/sendEmail.js";
 import dotenv from "dotenv";
-
+import bcrypt from "bcryptjs";
 dotenv.config();
 const generateTokens = (userId) => {
 	const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -143,9 +144,6 @@ export const getProfile = async (req, res) => {
 		res.status(500).json({ message: error.message });
 	}
 };
-
-
-// ========= UPDATE PROFILE =========
 export const updateProfile = async (req, res) => {
 	try {
 		const { name, email, mobile, avatar } = req.body;
@@ -176,7 +174,6 @@ export const updateProfile = async (req, res) => {
 		return res.status(500).json({ message: err.message });
 	}
 };
-
 export const updatePassword = async (req, res) => {
 	try {
 		const { currentPassword, newPassword, confirmPassword } = req.body;
@@ -184,8 +181,6 @@ export const updatePassword = async (req, res) => {
 		if (!currentPassword || !newPassword || !confirmPassword) {
 			return res.status(400).json({ message: "All fields are required" });
 		}
-
-		// ⭐ Minimum password length check
 		if (newPassword.length < 6) {
 			return res.status(400).json({ message: "Password must be at least 6 characters long" });
 		}
@@ -212,12 +207,65 @@ export const updatePassword = async (req, res) => {
 		return res.status(500).json({ message: "Server error" });
 	}
 };
+export const sendOTP = async (req, res) => {
+	try {
+		const { email } = req.body;
 
+		const user = await User.findOne({ email });
+		if (!user) {
+			return res.status(404).json({ message: "User not found" });
+		}
+
+		const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        console.log(otp);
+		user.otp = otp;
+		user.otpExpire = Date.now() + 10 * 60 * 1000;
+		await user.save();
+
+		await sendEmail(
+			user.email,
+			"Password Reset OTP",
+			otp
+		);
+
+		res.json({ message: "OTP sent to email" });
+	} catch (error) {
+		console.error("Send OTP error", error);
+		res.status(500).json({ message: "Server error" });
+	}
+};
+
+export const resetPasswordWithOTP = async (req, res) => {
+	try {
+		const { email, otp, password } = req.body;
+        if(!password || password.length<6){
+			return res.status(400).json({message:"password must be at least 6 character"});
+		}
+		const user=await User.findOne({
+			email,
+			otp,
+			otpExpire:{$gt:Date.now()}
+		});
+		if(!user){
+			return res.status(400).json({message:"Invalid or exprired OTP"});
+		}
+		user.password=password;
+		user.otp = undefined;
+		user.otpExpire = undefined;
+
+		await user.save();
+
+		res.json({ message: "Password reset successful" });
+	} catch (error) {
+		console.error("Reset password error", error);
+		res.status(500).json({ message: "Server error" });
+	}
+};
 export const ADMIN = async () => {
 	const user = await User.insertOne({
 		name : "kishanshukla",
-		email :"admin3@admin.com",
-		password:"admin12",
+		email :"admin13@admin.com",
+		password:"admin123",
 		role :"admin"
 	})
 	console.log("inside admin")
