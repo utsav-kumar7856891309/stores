@@ -3,8 +3,8 @@ import { useLocation, Navigate } from "react-router-dom";
 import api from "../lib/axios";
 
 const ResetPassword = () => {
-	const location = useLocation();
-	const email = location.state?.email;
+	
+	const email = localStorage.getItem("resetEmail");
 
 	const [otp, setOtp] = useState("");
 	const [password, setPassword] = useState("");

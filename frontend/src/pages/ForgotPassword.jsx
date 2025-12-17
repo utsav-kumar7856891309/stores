@@ -16,7 +16,7 @@ const ForgotPassword = () => {
 		try {
 			const res = await api.post("/auth/send-otp", { email });
 			setMessage(res.data.message);
-
+            localStorage.setItem("resetEmail", email);
 			
 			navigate("/reset-password", {
 				state: { email }
