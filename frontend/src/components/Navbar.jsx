@@ -214,9 +214,7 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* =======================
-          CATEGORY BAR
-      ======================= */}
+     
       <div className="border-t bg-gray-50 dark:bg-gray-800">
         <div className="flex items-center gap-8 px-6 mx-auto max-w-7xl h-12">
           {categories.map((c) => {
