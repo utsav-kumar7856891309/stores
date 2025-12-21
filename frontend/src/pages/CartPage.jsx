@@ -80,45 +80,48 @@ const CartPage = () => {
 
 export default CartPage;
 
-/* EMPTY CART UI */
 const EmptyCartUI = () => (
   <motion.div
     className="
       bg-white dark:bg-slate-900
       border border-slate-200 dark:border-slate-800
-      rounded-2xl shadow-sm
-      flex flex-col items-center justify-center
-      py-20 px-6 text-center
+      rounded-xl shadow-sm
+      flex flex-col items-center text-center
+      py-14 px-6
     "
-    initial={{ opacity: 0, y: 20 }}
+    initial={{ opacity: 0, y: 16 }}
     animate={{ opacity: 1, y: 0 }}
-    transition={{ duration: 0.5 }}
+    transition={{ duration: 0.4, ease: "easeOut" }}
   >
-    <div className="bg-slate-100 dark:bg-slate-800 p-6 rounded-full mb-6">
-      <ShoppingCart className="h-16 w-16 text-slate-400" />
+    <div className="
+      mb-4
+      p-4 rounded-full
+      bg-slate-100 dark:bg-slate-800
+    ">
+      <ShoppingCart className="h-12 w-12 text-slate-400" />
     </div>
 
-    <h3 className="text-2xl font-semibold text-slate-900 dark:text-white">
+    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
       Your cart is empty
     </h3>
 
-    <p className="text-slate-500 dark:text-slate-400 mt-2 max-w-sm">
-      Looks like you haven’t added anything yet.
-      Start exploring our electrical products.
+    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xs">
+      Add items to your cart to continue shopping.
     </p>
 
     <Link
       to="/"
       className="
-        mt-6 inline-flex items-center gap-2
-        bg-linear-to-r from-emerald-500 to-teal-500
-        text-white font-medium
-        px-8 py-3 rounded-full
-        hover:opacity-90 transition
+        mt-5 inline-flex items-center
+        bg-emerald-600 hover:bg-emerald-700
+        text-white text-sm font-medium
+        px-6 py-2.5 rounded-full
+        transition-colors
       "
     >
       Start Shopping
     </Link>
   </motion.div>
 );
+
 

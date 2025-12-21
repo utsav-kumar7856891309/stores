@@ -68,10 +68,9 @@ const MyOrdersPage = () => {
               p-5 space-y-4
             "
           >
-            {/* HEADER */}
             <div className="flex flex-wrap justify-between gap-4">
               <div>
-                <p className="text-sm text-slate-500">Order ID</p>
+                <p className="text-sm text-slate-500">Order id</p>
                 <p className="font-semibold">#{order._id.slice(-6)}</p>
               </div>
 
