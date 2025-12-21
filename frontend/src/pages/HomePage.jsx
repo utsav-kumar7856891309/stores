@@ -67,7 +67,7 @@ const HomePage = () => {
     fetchFeaturedProducts();
   }, [fetchFeaturedProducts]);
 
-  // Auto slider for main banner
+ 
   useEffect(() => {
     if (!autoSlide) return;
     
