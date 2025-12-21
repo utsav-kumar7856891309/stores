@@ -10,9 +10,9 @@ const categories = [
   "AC",
   "coolers",
   "fan",
-  "wires",
+  "wires & cables",
   "Refrigerator",
-  "cables"
+  
 
 ];
 
@@ -116,7 +116,7 @@ const CreateProductForm = () => {
       "coolers": "Coolers",
       "fan": "Fans",
       "wires": "Wires & Cables",
-      "cables": "Cables"
+      "Refrigerator": "Refrigerators",
     };
     return categoryMap[slug] || slug;
   };
