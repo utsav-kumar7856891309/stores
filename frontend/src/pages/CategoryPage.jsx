@@ -379,7 +379,6 @@ const CategoryPage = () => {
               )}
             </div>
 
-            {/* BY CATEGORIES */}
             <div className="p-4 bg-white border rounded-lg dark:bg-gray-800">
               <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
                 Categories
@@ -421,8 +420,7 @@ const CategoryPage = () => {
                 onChange={handleRangeChange}
                 className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer dark:bg-gray-700"
               />
-
-              {/* Price Display Boxes - Pahle wala design */}
+ 
               <div className="flex justify-between mt-4 text-sm">
                 <div className="text-center">
                   <div className="px-3 py-2 bg-white border border-gray-300 rounded-lg dark:border-gray-700 dark:bg-gray-900">

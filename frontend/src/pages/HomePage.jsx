@@ -173,7 +173,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* SHOP BY CATEGORY SECTION - AC and Coolers separate */}
+      
       <section className="px-4 py-10 mx-auto mb-12 max-w-7xl">
         <div className="mb-8 text-center">
           <h2 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">

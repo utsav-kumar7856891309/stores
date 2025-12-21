@@ -14,7 +14,6 @@ import {
   Settings,
   LogOut,
 
-  // ✅ CATEGORY ICONS (FIXED)
   Monitor,
   Tv,
   Zap,
@@ -26,10 +25,6 @@ import {
 
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
-
-/* =======================
-   CATEGORY CONFIG
-======================= */
 const categories = [
   {
     name: "Electronics",
@@ -64,7 +59,7 @@ const categories = [
   {
     name: "Wires & Cables",
     icon: Cable,
-    slug: "wires-cables", // ✅ FIXED (no space)
+    slug: "wires-cables",
     color: "text-orange-500",
   },
   {
@@ -74,16 +69,12 @@ const categories = [
     color: "text-yellow-500",
   },
 ];
-
 const Navbar = () => {
   const { user, logout } = useUserStore();
   const { cart } = useCartStore();
   const isAdmin = user?.role === "admin";
   const navigate = useNavigate();
 
-  /* =======================
-     THEME SETUP
-  ======================= */
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
     if (saved) return saved;
