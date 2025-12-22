@@ -17,23 +17,31 @@ import {
   Headphones,
   CreditCard,
   RefrigeratorIcon,
+  ArrowRight,
+  Star,
+  CheckCircle,
+  TrendingUp,
+  Award,
+  Clock,
+  ShieldCheck,
+  BatteryCharging,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const sliderImages = [
-  "/TV1.jpg",
+  "/ac.jpg.webp",
   "/fan.jpg.webp",
   "/cable.jpg.jpg",
 ];
 
 const categories = [
-  { name: "Electronics", icon: Monitor, slug: "electronics", color: "text-indigo-500", bg: "bg-indigo-50 dark:bg-indigo-900/20" },
-  { name: "TVs & Appliances", icon: Tv, slug: "tv", color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20" },
-  { name: "AC", icon: Zap, slug: "ac", color: "text-teal-500", bg: "bg-teal-50 dark:bg-teal-900/20" },
-  { name: "Coolers", icon: Wind, slug: "coolers", color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
-  { name: "Fans", icon: Fan, slug: "fan", color: "text-cyan-500", bg: "bg-cyan-50 dark:bg-cyan-900/20" },
-  { name: "Wires & Cables", icon: Cable, slug: "wires & cables", color: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-900/20" },
-  { name: "Refrigerators", icon: RefrigeratorIcon, slug: "refrigerators", color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
+  { name: "Electronics", icon: Monitor, slug: "electronics", color: "text-indigo-500", bg: "bg-indigo-50 dark:bg-indigo-900/20", gradient: "from-indigo-400 to-blue-500" },
+  { name: "TVs & Appliances", icon: Tv, slug: "tv", color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20", gradient: "from-purple-400 to-pink-500" },
+  { name: "AC", icon: Zap, slug: "ac", color: "text-teal-500", bg: "bg-teal-50 dark:bg-teal-900/20", gradient: "from-teal-400 to-cyan-500" },
+  { name: "Coolers", icon: Wind, slug: "coolers", color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20", gradient: "from-blue-400 to-sky-500" },
+  { name: "Fans", icon: Fan, slug: "fan", color: "text-cyan-500", bg: "bg-cyan-50 dark:bg-cyan-900/20", gradient: "from-cyan-400 to-emerald-500" },
+  { name: "Wires & Cables", icon: Cable, slug: "wires & cables", color: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-900/20", gradient: "from-orange-400 to-red-500" },
+  { name: "Refrigerators", icon: RefrigeratorIcon, slug: "refrigerators", color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-900/20", gradient: "from-yellow-400 to-amber-500" },
 ];
 
 const featuredBanners = [
@@ -41,19 +49,22 @@ const featuredBanners = [
     title: "Summer Sale",
     subtitle: "Upto 40% OFF on Coolers",
     image: "/cooler.jpg.webp",
-    link: "/category/coolers"
+    link: "/category/coolers",
+    badge: "HOT DEAL"
   },
   {
     title: "Premium Quality",
     subtitle: "Industrial Grade Wires",
     image: "/cable.jpg.jpg",
-    link: "/category/wires"
+    link: "/category/wires",
+    badge: "PREMIUM"
   },
   {
     title: "Energy Efficient",
     subtitle: "5-Star Rated Fans",
     image: "/fan.jpg.webp",
-    link: "/category/fan"
+    link: "/category/fan",
+    badge: "ENERGY SAVER"
   }
 ];
 
@@ -62,12 +73,13 @@ const HomePage = () => {
   const [slide, setSlide] = useState(0);
   const [bannerSlide, setBannerSlide] = useState(0);
   const [autoSlide, setAutoSlide] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     fetchFeaturedProducts();
+    setMounted(true);
   }, [fetchFeaturedProducts]);
 
- 
   useEffect(() => {
     if (!autoSlide) return;
     
@@ -77,7 +89,6 @@ const HomePage = () => {
     return () => clearInterval(timer);
   }, [autoSlide]);
 
-  // Auto slider for featured banners
   useEffect(() => {
     const timer = setInterval(() => {
       setBannerSlide((prev) => (prev + 1) % featuredBanners.length);
@@ -102,296 +113,394 @@ const HomePage = () => {
   };
 
   return (
-    <div className="min-h-screen pb-16 bg-white dark:bg-gray-900 pt-28">
+    <div className="min-h-screen pb-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 pt-28">
+      {/* Animated Background Elements */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute bg-purple-300 rounded-full top-1/4 left-10 w-72 h-72 mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-5 animate-pulse"></div>
+        <div className="absolute delay-1000 bg-blue-300 rounded-full bottom-1/4 right-10 w-96 h-96 mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-5 animate-pulse"></div>
+        <div className="absolute w-64 h-64 delay-500 bg-teal-300 rounded-full top-3/4 left-1/3 mix-blend-multiply filter blur-3xl opacity-10 dark:opacity-5 animate-pulse"></div>
+      </div>
 
-      <section className="relative max-w-6xl px-4 mx-auto mb-12">
-        <div 
-          className="relative overflow-hidden shadow-lg h-80 md:h-96 rounded-xl"
-          onMouseEnter={() => setAutoSlide(false)}
-          onMouseLeave={() => setAutoSlide(true)}
-        >
-          {/* Main slider image */}
-          <img
-            src={sliderImages[slide]}
-            className="object-cover w-full h-full transition-all duration-500"
-            alt="banner"
-          />
+      {/* Hero Slider Section */}
+      <section className="relative px-4 mx-auto mb-16 max-w-7xl">
+        <div className="relative">
+          {/* Glass Morphism Background */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 via-purple-500/10 to-pink-500/10 dark:from-blue-500/5 dark:via-purple-500/5 dark:to-pink-500/5 rounded-3xl blur-3xl"></div>
           
-          {/* Dark overlay for better text visibility */}
-          <div className="absolute inset-0 bg-linear-to-r from-black/60 via-black/30 to-transparent" />
-          
-          {/* Slide indicator dots */}
-          <div className="absolute flex gap-2 -translate-x-1/2 bottom-4 left-1/2">
-            {sliderImages.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setSlide(idx)}
-                className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                  idx === slide 
-                    ? 'bg-white w-6' 
-                    : 'bg-white/50 hover:bg-white/80'
-                }`}
-                aria-label={`Go to slide ${idx + 1}`}
+          <div 
+            className="relative overflow-hidden rounded-2xl shadow-2xl h-[500px] backdrop-blur-sm bg-white/80 dark:bg-gray-800/80 border border-white/20 dark:border-gray-700/50"
+            onMouseEnter={() => setAutoSlide(false)}
+            onMouseLeave={() => setAutoSlide(true)}
+          >
+            {/* Main slider with parallax effect */}
+            <div className="absolute inset-0">
+              <img
+                src={sliderImages[slide]}
+                className={`object-cover w-full h-full transition-all duration-1000 ${mounted ? 'scale-100' : 'scale-110'}`}
+                alt="banner"
               />
-            ))}
-          </div>
-
-          {/* Navigation buttons */}
-          <button
-            onClick={prevSlide}
-            className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 p-2.5 rounded-full text-white transition-all duration-300 hover:scale-110"
-            aria-label="Previous slide"
-          >
-            <ChevronLeft size={20} />
-          </button>
-
-          <button
-            onClick={nextSlide}
-            className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 p-2.5 rounded-full text-white transition-all duration-300 hover:scale-110"
-            aria-label="Next slide"
-          >
-            <ChevronRight size={20} />
-          </button>
-
-          {/* Slide text content */}
-          <div className="absolute max-w-md text-white left-8 md:left-12 bottom-10 md:bottom-12">
-            <h1 className="mb-2 text-2xl font-bold md:text-3xl">
-              Premium Electrical Products
-            </h1>
-            <p className="mb-4 text-sm md:text-base opacity-90">
-              Quality wiring, cooling solutions, and home appliances
-            </p>
-            <Link
-              to="/category/electronics"
-              className="inline-flex items-center gap-2 bg-white text-gray-900 hover:bg-gray-100 px-5 py-2.5 rounded-lg font-medium transition-colors"
+              
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent"></div>
+              
+              {/* Pattern Overlay */}
+              <div className="absolute inset-0 opacity-[0.02]" style={{
+                backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+              }}></div>
+            </div>
+            
+            {/* Content Container */}
+            <div className="relative z-10 flex items-center h-full">
+              <div className="max-w-2xl pl-12 space-y-6">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold text-white rounded-full bg-gradient-to-r from-emerald-500 to-teal-500">
+                  <Sparkles size={14} />
+                  <span>TRENDING NOW</span>
+                </div>
+                
+                {/* Title with gradient */}
+                <h1 className="text-5xl font-bold leading-tight text-white">
+                  Premium Electrical
+                  <span className="block text-transparent bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text">
+                    Products
+                  </span>
+                </h1>
+                
+                {/* Description */}
+                <p className="max-w-lg text-lg text-gray-200">
+                  Discover quality wiring, efficient cooling solutions, and modern home appliances with exclusive deals
+                </p>
+                
+                {/* CTA Buttons */}
+                <div className="flex gap-4 pt-4">
+                  <Link
+                    to="/category/electronics"
+                    className="relative inline-flex items-center gap-3 px-8 py-4 font-semibold text-white transition-all duration-300 group bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 rounded-xl hover:scale-105 hover:shadow-2xl"
+                  >
+                    <ShoppingBag size={20} />
+                    <span>Shop Now</span>
+                    <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                    <div className="absolute inset-0 transition-opacity duration-300 opacity-0 rounded-xl bg-gradient-to-r from-white/20 to-transparent group-hover:opacity-100"></div>
+                  </Link>
+                  
+                  <Link
+                    to="/products"
+                    className="px-8 py-4 font-semibold text-white transition-all duration-300 border-2 group border-white/30 rounded-xl hover:bg-white/10 backdrop-blur-sm hover:border-white/50"
+                  >
+                    <span className="relative">
+                      View All
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+                    </span>
+                  </Link>
+                </div>
+              </div>
+            </div>
+            
+            {/* Slide Navigation Dots */}
+            <div className="absolute flex gap-3 -translate-x-1/2 bottom-8 left-1/2">
+              {sliderImages.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => setSlide(idx)}
+                  className={`relative w-12 h-2 rounded-full overflow-hidden transition-all duration-300 ${
+                    idx === slide ? 'bg-white' : 'bg-white/40 hover:bg-white/60'
+                  }`}
+                  aria-label={`Go to slide ${idx + 1}`}
+                >
+                  <div className={`absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 transition-all duration-1000 ${
+                    idx === slide ? 'w-full' : 'w-0'
+                  }`}></div>
+                </button>
+              ))}
+            </div>
+            
+            {/* Navigation Buttons */}
+            <button
+              onClick={prevSlide}
+              className="absolute p-4 text-white transition-all duration-300 -translate-y-1/2 border rounded-full left-6 top-1/2 group bg-white/10 backdrop-blur-md hover:bg-white/20 hover:scale-110 border-white/20"
+              aria-label="Previous slide"
             >
-              <ShoppingBag size={18} />
-              Shop Now
-            </Link>
+              <ChevronLeft size={24} className="transition-transform group-hover:-translate-x-1" />
+            </button>
+            
+            <button
+              onClick={nextSlide}
+              className="absolute p-4 text-white transition-all duration-300 -translate-y-1/2 border rounded-full right-6 top-1/2 group bg-white/10 backdrop-blur-md hover:bg-white/20 hover:scale-110 border-white/20"
+              aria-label="Next slide"
+            >
+              <ChevronRight size={24} className="transition-transform group-hover:translate-x-1" />
+            </button>
           </div>
         </div>
       </section>
 
-      
-      <section className="px-4 py-10 mx-auto mb-12 max-w-7xl">
-        <div className="mb-8 text-center">
-          <h2 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
-            Shop by Category
+      {/* Category Grid Section */}
+      <section className="relative px-4 py-12 mx-auto mb-16 max-w-7xl">
+        <div className="relative z-10 mb-12 text-center">
+          <div className="inline-flex items-center gap-3 px-6 py-2 mb-4 border border-blue-100 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700">
+            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+            <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">CATEGORIES</span>
+          </div>
+          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
+            Shop by <span className="text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text">Category</span>
           </h2>
-          <p className="text-gray-600 dark:text-gray-300">
-            Browse our wide range of electrical products
+          <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-300">
+            Browse our comprehensive range of electrical products for every need
           </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
+        <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-7">
           {categories.map((cat) => {
             const Icon = cat.icon;
             return (
               <Link
                 key={cat.slug}
                 to={`/category/${cat.slug}`}
-                className="flex flex-col items-center gap-3 p-4 transition-all duration-300 bg-white border border-gray-100 rounded-lg shadow group dark:bg-gray-800 hover:shadow-lg hover:-translate-y-1 dark:border-gray-700"
+                className="relative p-6 overflow-hidden transition-all duration-500 border border-gray-100 group rounded-2xl bg-gradient-to-b from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700 hover:scale-105 hover:shadow-2xl hover:border-transparent"
               >
-                <div className={`w-14 h-14 ${cat.bg} rounded-full flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-                  <Icon size={26} className={cat.color} />
+                {/* Animated gradient background */}
+                <div className={`absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br ${cat.gradient} transition-opacity duration-500 -z-10`}></div>
+                
+                {/* Icon Container */}
+                <div className="relative mb-5">
+                  <div className={`absolute inset-0 ${cat.bg} rounded-2xl group-hover:scale-110 transition-transform duration-500`}></div>
+                  <div className="relative flex items-center justify-center w-16 h-16 mx-auto">
+                    <div className={`p-4 rounded-xl bg-gradient-to-br ${cat.gradient} shadow-lg group-hover:shadow-2xl transition-all duration-500`}>
+                      <Icon size={28} className="text-white" />
+                    </div>
+                  </div>
                 </div>
-                <p className="text-xs font-medium leading-tight text-center text-gray-900 dark:text-white md:text-sm">
+                
+                {/* Category Name */}
+                <h3 className="text-sm font-semibold text-center text-gray-900 transition-colors duration-300 dark:text-white group-hover:text-white">
                   {cat.name}
-                </p>
+                </h3>
+                
+                {/* Hover arrow */}
+                <div className="absolute transition-all duration-300 translate-x-2 opacity-0 bottom-4 right-4 group-hover:opacity-100 group-hover:translate-x-0">
+                  <ArrowRight size={16} className="text-white" />
+                </div>
               </Link>
             );
           })}
         </div>
       </section>
 
-      {/* UPDATED FEATURES SECTION - Aapke diye gaye design ke hisaab se */}
-      <section className="py-8 bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
-        <div className="px-6 mx-auto max-w-7xl">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-4">
-            <div className="flex items-center gap-4 p-4">
-              <div className="p-3 bg-blue-100 rounded-lg dark:bg-blue-900/30">
-                <Truck size={24} className="text-blue-600 dark:text-blue-400" />
+      {/* Features Section - Glass Morphism */}
+      <section className="relative px-4 py-16 mx-auto mb-16 max-w-7xl">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-pink-500/5 rounded-3xl blur-3xl"></div>
+        
+        <div className="relative p-8 border shadow-2xl backdrop-blur-sm bg-white/60 dark:bg-gray-800/60 rounded-3xl border-white/20 dark:border-gray-700/50">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
+            <div className="p-6 transition-all duration-300 border border-gray-100 group rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800/50 dark:to-gray-900/50 dark:border-gray-700/50 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-xl">
+              <div className="inline-flex p-3 mb-4 rounded-xl bg-gradient-to-r from-blue-500 to-cyan-500">
+                <Truck size={24} className="text-white" />
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white">Fast Delivery</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Service available in multiple cities</p>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-4 p-4">
-              <div className="p-3 bg-green-100 rounded-lg dark:bg-green-900/30">
-                <Shield size={24} className="text-green-600 dark:text-green-400" />
-              </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white">Quality Guarantee</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">1-5 years warranty on products</p>
+              <h4 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">Fast Delivery</h4>
+              <p className="text-gray-600 dark:text-gray-300">Same-day delivery in metro cities</p>
+              <div className="mt-4 text-sm text-blue-600 transition-opacity duration-300 opacity-0 dark:text-blue-400 group-hover:opacity-100">
+                <CheckCircle size={14} className="inline mr-1" />
+                Service available
               </div>
             </div>
             
-            <div className="flex items-center gap-4 p-4">
-              <div className="p-3 bg-purple-100 rounded-lg dark:bg-purple-900/30">
-                <CreditCard size={24} className="text-purple-600 dark:text-purple-400" />
+            <div className="p-6 transition-all duration-300 border border-gray-100 group rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800/50 dark:to-gray-900/50 dark:border-gray-700/50 hover:border-green-300 dark:hover:border-green-500 hover:shadow-xl">
+              <div className="inline-flex p-3 mb-4 rounded-xl bg-gradient-to-r from-emerald-500 to-green-500">
+                <ShieldCheck size={24} className="text-white" />
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white">Easy Installation</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Professional installation services</p>
+              <h4 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">Quality Guarantee</h4>
+              <p className="text-gray-600 dark:text-gray-300">1-5 years warranty on all products</p>
+              <div className="mt-4 text-sm text-green-600 transition-opacity duration-300 opacity-0 dark:text-green-400 group-hover:opacity-100">
+                <Award size={14} className="inline mr-1" />
+                Certified quality
               </div>
             </div>
             
-            <div className="flex items-center gap-4 p-4">
-              <div className="p-3 bg-orange-100 rounded-lg dark:bg-orange-900/30">
-                <Headphones size={24} className="text-orange-600 dark:text-orange-400" />
+            <div className="p-6 transition-all duration-300 border border-gray-100 group rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800/50 dark:to-gray-900/50 dark:border-gray-700/50 hover:border-purple-300 dark:hover:border-purple-500 hover:shadow-xl">
+              <div className="inline-flex p-3 mb-4 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500">
+                <CreditCard size={24} className="text-white" />
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white">24/7 Support</h4>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Expert customer support</p>
+              <h4 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">Easy Installation</h4>
+              <p className="text-gray-600 dark:text-gray-300">Professional setup services included</p>
+              <div className="mt-4 text-sm text-purple-600 transition-opacity duration-300 opacity-0 dark:text-purple-400 group-hover:opacity-100">
+                <Clock size={14} className="inline mr-1" />
+                24/7 support
+              </div>
+            </div>
+            
+            <div className="p-6 transition-all duration-300 border border-gray-100 group rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800/50 dark:to-gray-900/50 dark:border-gray-700/50 hover:border-orange-300 dark:hover:border-orange-500 hover:shadow-xl">
+              <div className="inline-flex p-3 mb-4 rounded-xl bg-gradient-to-r from-orange-500 to-red-500">
+                <Headphones size={24} className="text-white" />
+              </div>
+              <h4 className="mb-2 text-lg font-bold text-gray-900 dark:text-white">24/7 Support</h4>
+              <p className="text-gray-600 dark:text-gray-300">Expert customer support team</p>
+              <div className="mt-4 text-sm text-orange-600 transition-opacity duration-300 opacity-0 dark:text-orange-400 group-hover:opacity-100">
+                <BatteryCharging size={14} className="inline mr-1" />
+                Always available
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* FEATURED PRODUCTS WITH BANNER SLIDER - Layout swapped */}
-      <section className="px-4 py-10 mx-auto mb-16 max-w-7xl">
-        
-        {/* Featured Products Header with Featured badge centered */}
-        <div className="mb-8">
-          <div className="flex flex-col items-center gap-4 mb-6">
-            <div className="flex flex-col items-center text-center">
-              <div className="flex items-center justify-center gap-2 mb-2">
-                <div className="w-10 h-1 bg-blue-600 rounded-full"></div>
-                <div className="flex items-center gap-2 px-5 py-2 rounded-full shadow-lg bg-linear-to-r from-emerald-500 to-green-500">
-                  <Sparkles size={18} className="text-white" />
-                  <span className="text-sm font-bold text-white">FEATURED</span>
-                </div>
-                <div className="w-10 h-1 bg-blue-600 rounded-full"></div>
-              </div>
-              <h2 className="text-3xl font-bold text-gray-900 dark:text-white">
-                Featured Products
-              </h2>
-              <p className="max-w-xl mt-2 text-gray-600 dark:text-gray-300">
-                Discover our premium selection of best-selling electrical products
-              </p>
-            </div>
+      {/* Featured Products with Banner Section */}
+      <section className="relative px-4 py-16 mx-auto mb-16 max-w-7xl">
+        <div className="relative z-10 mb-12 text-center">
+          <div className="inline-flex items-center gap-2 px-6 py-2 mb-4 text-white rounded-full bg-gradient-to-r from-emerald-500 to-green-500">
+            <Sparkles size={16} />
+            <span className="text-sm font-bold">FEATURED PRODUCTS</span>
           </div>
+          <h2 className="mb-4 text-4xl font-bold text-gray-900 dark:text-white">
+            Premium <span className="text-transparent bg-gradient-to-r from-emerald-600 to-green-500 bg-clip-text">Selection</span>
+          </h2>
+          <p className="max-w-2xl mx-auto text-lg text-gray-600 dark:text-gray-300">
+            Discover our handpicked collection of best-selling electrical products
+          </p>
         </div>
 
         <div className="flex flex-col gap-8 lg:flex-row">
-          
-          {/* Left side - Banner Slider */}
-          <div className="lg:w-1/3">
-            <div className="relative bg-gray-100 dark:bg-gray-800 rounded-xl overflow-hidden shadow-lg h-full min-h-[400px]">
-              
-              {/* Banner slider images */}
-              <div className="relative h-full">
+          {/* Banner Slider */}
+          <div className="lg:w-2/5">
+            <div className="relative overflow-hidden rounded-3xl shadow-2xl h-full min-h-[500px] group">
+              {/* Banner Image */}
+              <div className="absolute inset-0">
                 <img
                   src={featuredBanners[bannerSlide].image}
-                  className="object-cover w-full h-full transition-all duration-500"
+                  className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
                   alt={featuredBanners[bannerSlide].title}
                 />
-                
-                {/* Dark overlay */}
-                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/40 to-transparent" />
-                
-                {/* Banner content */}
-                <div className="absolute text-white bottom-6 left-6 right-6">
-                  <h3 className="mb-1 text-xl font-bold">
-                    {featuredBanners[bannerSlide].title}
-                  </h3>
-                  <p className="mb-4 text-sm opacity-90">
-                    {featuredBanners[bannerSlide].subtitle}
-                  </p>
-                  <Link
-                    to={featuredBanners[bannerSlide].link}
-                    className="inline-flex items-center gap-1 px-4 py-2 text-sm font-medium text-gray-900 transition-colors bg-white rounded-lg hover:bg-gray-100"
-                  >
-                    Shop Now
-                    <ChevronRight size={14} />
-                  </Link>
-                </div>
-
-                {/* Banner navigation buttons */}
-                <button
-                  onClick={prevBannerSlide}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 p-1.5 rounded-full text-white transition-all duration-300"
-                  aria-label="Previous banner"
-                >
-                  <ChevronLeft size={16} />
-                </button>
-
-                <button
-                  onClick={nextBannerSlide}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 hover:bg-black/50 p-1.5 rounded-full text-white transition-all duration-300"
-                  aria-label="Next banner"
-                >
-                  <ChevronRight size={16} />
-                </button>
-
-                {/* Banner indicator dots */}
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-                  {featuredBanners.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setBannerSlide(idx)}
-                      className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                        idx === bannerSlide 
-                          ? 'bg-white w-4' 
-                          : 'bg-white/50 hover:bg-white/80'
-                      }`}
-                      aria-label={`Go to banner ${idx + 1}`}
-                    />
-                  ))}
-                </div>
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
               </div>
-            </div>
-          </div>
-
-          {/* Right side - Featured Products */}
-          <div className="lg:w-2/3">
-            {isLoading ? (
-              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {[1, 2, 3, 4, 5, 6].map((i) => (
-                  <div key={i} className="h-64 bg-gray-200 dark:bg-gray-800 rounded-xl animate-pulse" />
+              
+              {/* Banner Content */}
+              <div className="relative z-10 flex flex-col justify-end h-full p-8">
+                {/* Badge */}
+                <div className="inline-flex items-center gap-2 px-4 py-2 mb-4 border rounded-full bg-white/20 backdrop-blur-sm border-white/30 w-fit">
+                  <TrendingUp size={14} className="text-white" />
+                  <span className="text-sm font-semibold text-white">{featuredBanners[bannerSlide].badge}</span>
+                </div>
+                
+                <h3 className="mb-2 text-3xl font-bold text-white">
+                  {featuredBanners[bannerSlide].title}
+                </h3>
+                <p className="mb-6 text-lg text-gray-200">
+                  {featuredBanners[bannerSlide].subtitle}
+                </p>
+                
+                <Link
+                  to={featuredBanners[bannerSlide].link}
+                  className="relative inline-flex items-center gap-3 px-6 py-3 font-semibold text-gray-900 transition-all duration-300 bg-white group hover:bg-gray-100 rounded-xl w-fit"
+                >
+                  <span>Explore Now</span>
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </Link>
+              </div>
+              
+              {/* Navigation Dots */}
+              <div className="absolute flex gap-2 -translate-x-1/2 bottom-6 left-1/2">
+                {featuredBanners.map((_, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => setBannerSlide(idx)}
+                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                      idx === bannerSlide 
+                        ? 'bg-white w-8' 
+                        : 'bg-white/50 hover:bg-white/80'
+                    }`}
+                    aria-label={`Go to banner ${idx + 1}`}
+                  />
                 ))}
               </div>
-            ) : (
-              <div className="pb-4">
-                <FeaturedProducts featuredProducts={products.slice(0, 6)} />
-              </div>
-            )}
+              
+              {/* Navigation Buttons */}
+              <button
+                onClick={prevBannerSlide}
+                className="absolute p-3 text-white transition-all duration-300 -translate-y-1/2 border rounded-full left-4 top-1/2 bg-black/20 hover:bg-black/40 backdrop-blur-sm border-white/20"
+                aria-label="Previous banner"
+              >
+                <ChevronLeft size={20} />
+              </button>
+              
+              <button
+                onClick={nextBannerSlide}
+                className="absolute p-3 text-white transition-all duration-300 -translate-y-1/2 border rounded-full right-4 top-1/2 bg-black/20 hover:bg-black/40 backdrop-blur-sm border-white/20"
+                aria-label="Next banner"
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA SECTION - Browse Products button */}
-      <section className="max-w-4xl px-4 py-12 mx-auto">
-        <div className="p-10 text-center text-white bg-linear-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800 rounded-2xl">
-          <div className="max-w-2xl mx-auto">
-            <h2 className="mb-4 text-2xl font-bold md:text-3xl">
-              Explore Our Complete Collection
-            </h2>
-            <p className="mb-8 text-lg opacity-90">
-              Find the best electrical products for your home and office needs
-            </p>
-            <div className="flex flex-col justify-center gap-4 sm:flex-row">
-              <Link
-                to="/category/electronics"
-                className="inline-flex items-center gap-2 px-8 py-3 text-lg font-bold text-blue-600 transition-all duration-300 bg-white rounded-full hover:bg-gray-100 hover:scale-105"
-              >
-                <ShoppingBag size={20} />
-                Browse Products
-              </Link>
-              <Link
-                to="/contact"
-                className="inline-flex items-center gap-2 px-8 py-3 text-lg font-bold transition-all duration-300 bg-transparent border-2 border-white rounded-full hover:bg-white/10"
-              >
-                Contact Us
-              </Link>
+          
+          {/* Featured Products Grid */}
+          <div className="lg:w-3/5">
+            <div className="relative p-6 border shadow-2xl backdrop-blur-sm bg-white/60 dark:bg-gray-800/60 rounded-3xl border-white/20 dark:border-gray-700/50">
+              {isLoading ? (
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl animate-pulse"></div>
+                  ))}
+                </div>
+              ) : (
+                <div className="pb-4">
+                  <FeaturedProducts featuredProducts={products.slice(0, 6)} />
+                </div>
+              )}
             </div>
           </div>
         </div>
       </section>
 
+      {/* Final CTA Section */}
+      <section className="relative max-w-6xl px-4 py-16 mx-auto">
+        <div className="relative overflow-hidden rounded-3xl">
+          {/* Background with animated gradient */}
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 animate-gradient-x"></div>
+          
+          {/* Pattern overlay */}
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }}></div>
+          
+          {/* Content */}
+          <div className="relative z-10 px-8 py-16 text-center md:px-16">
+            <div className="inline-flex items-center gap-2 px-6 py-2 mb-6 border rounded-full bg-white/20 backdrop-blur-sm border-white/30">
+              <Star size={16} className="text-white" />
+              <span className="text-sm font-semibold text-white">LIMITED TIME OFFER</span>
+            </div>
+            
+            <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">
+              Upgrade Your Space with
+              <span className="block mt-2">Premium Electrical Solutions</span>
+            </h2>
+            
+            <p className="max-w-2xl mx-auto mb-10 text-lg text-gray-200">
+              From smart appliances to energy-efficient solutions, find everything you need for modern living
+            </p>
+            
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
+              <Link
+                to="/products"
+                className="relative px-10 py-4 overflow-hidden text-lg font-bold text-gray-900 transition-all duration-300 bg-white group hover:text-gray-800 rounded-xl hover:scale-105 hover:shadow-2xl"
+              >
+                <span className="relative z-10">Browse All Products</span>
+                <div className="absolute inset-0 transition-opacity duration-300 opacity-0 bg-gradient-to-r from-white to-gray-100 group-hover:opacity-100"></div>
+                <div className="absolute bottom-0 left-0 w-full h-1 transition-transform duration-500 origin-left transform scale-x-0 bg-gradient-to-r from-cyan-400 to-blue-500 group-hover:scale-x-100"></div>
+              </Link>
+              
+              <Link
+                to="/contact"
+                className="px-10 py-4 text-lg font-bold text-white transition-all duration-300 border-2 group border-white/40 rounded-xl hover:bg-white/10 backdrop-blur-sm hover:border-white/70"
+              >
+                <span className="relative">
+                  Get Expert Advice
+                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full"></span>
+                </span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 };

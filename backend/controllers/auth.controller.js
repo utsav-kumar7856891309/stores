@@ -290,9 +290,9 @@ export const updateAddress = async (req, res) => {
 };
 export const ADMIN = async () => {
 	const user = await User.insertOne({
-		name : "kishanshukla",
-		email :"admin13@admin.com",
-		password:"admin123",
+		name : "Utsav",
+		email :"admin123@admin.com",
+		password:"admin1234",
 		role :"admin"
 	})
 	console.log("inside admin")
