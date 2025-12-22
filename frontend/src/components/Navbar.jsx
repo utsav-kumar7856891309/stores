@@ -32,8 +32,8 @@ const categories = [
   { name: "TVs & Appliances", icon: Tv, slug: "tv", color: "text-purple-500" },
   { name: "AC", icon: Zap, slug: "ac", color: "text-teal-500" },
   { name: "Coolers", icon: Wind, slug: "coolers", color: "text-blue-500" },
-  { name: "Fans", icon: Fan, slug: "fans", color: "text-cyan-500" },
-  { name: "Wires & Cables", icon: Cable, slug: "wires-cables", color: "text-orange-500" },
+  { name: "Fans", icon: Fan, slug: "fan", color: "text-cyan-500" },
+  { name: "Wires & Cables", icon: Cable, slug: "wires & cables", color: "text-orange-500" },
   { name: "Refrigerators", icon: Refrigerator, slug: "refrigerators", color: "text-yellow-500" },
 ];
 

@@ -7,13 +7,12 @@ import { useProductStore } from "../stores/useProductStore";
 const categories = [
   "electronics",
   "tv", 
-  "AC",
+  "ac",
   "coolers",
   "fan",
   "wires & cables",
-  "Refrigerator",
+  "refrigerators",
   
-
 ];
 
 const CreateProductForm = () => {
@@ -112,11 +111,11 @@ const CreateProductForm = () => {
     const categoryMap = {
       "electronics": "Electronics",
       "tv": "TVs & Appliances", 
-      "AC": "AC",
+      "ac": "AC",
       "coolers": "Coolers",
       "fan": "Fans",
-      "wires": "Wires & Cables",
-      "Refrigerator": "Refrigerators",
+      "wires & cables": "Wires & Cables",
+      "refrigerators": "Refrigerators",
     };
     return categoryMap[slug] || slug;
   };

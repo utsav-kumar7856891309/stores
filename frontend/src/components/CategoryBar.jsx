@@ -4,10 +4,10 @@ import { NavLink, useLocation } from "react-router-dom";
 const categories = [
 	{ name: "Electronics", slug: "electronics" },
 	{ name: "TVs & Appliances", slug: "tv" },
-	{ name: "AC & Coolers", slug: "AC" },
+	{ name: "AC & Coolers", slug: "ac" },
 	{ name: "Fans", slug: "fan" },
-	{ name: "Wires & Cables", slug: "wires" },
-	{ name: "Home Appliances", slug: "freeze" },
+	{ name: "Wires & Cables", slug: "wires & cables" },
+	{ name: "Refrigerators", slug: "refrigerators" },
 ];
 
 const CategoryBar = () => {

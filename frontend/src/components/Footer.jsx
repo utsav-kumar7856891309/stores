@@ -111,9 +111,9 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/category/AC" className="flex items-center gap-2 text-gray-600 transition-colors dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+              <Link to="/category/ac" className="flex items-center gap-2 text-gray-600 transition-colors dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
                 <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                Air Conditioners
+                AC
               </Link>
             </li>
             <li>
@@ -129,7 +129,7 @@ const Footer = () => {
               </Link>
             </li>
             <li>
-              <Link to="/category/wires" className="flex items-center gap-2 text-gray-600 transition-colors dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
+              <Link to="/category/wires & cables" className="flex items-center gap-2 text-gray-600 transition-colors dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400">
                 <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
                 Wires & Cables
               </Link>

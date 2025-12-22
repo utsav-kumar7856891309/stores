@@ -29,11 +29,11 @@ const sliderImages = [
 const categories = [
   { name: "Electronics", icon: Monitor, slug: "electronics", color: "text-indigo-500", bg: "bg-indigo-50 dark:bg-indigo-900/20" },
   { name: "TVs & Appliances", icon: Tv, slug: "tv", color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20" },
-  { name: "AC", icon: Zap, slug: "AC", color: "text-teal-500", bg: "bg-teal-50 dark:bg-teal-900/20" },
+  { name: "AC", icon: Zap, slug: "ac", color: "text-teal-500", bg: "bg-teal-50 dark:bg-teal-900/20" },
   { name: "Coolers", icon: Wind, slug: "coolers", color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
   { name: "Fans", icon: Fan, slug: "fan", color: "text-cyan-500", bg: "bg-cyan-50 dark:bg-cyan-900/20" },
-  { name: "Wires & Cables", icon: Cable, slug: "wires", color: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-900/20" },
-  { name: "Refrigerator", icon: RefrigeratorIcon, slug: "refrigerator", color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
+  { name: "Wires & Cables", icon: Cable, slug: "wires & cables", color: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-900/20" },
+  { name: "Refrigerators", icon: RefrigeratorIcon, slug: "refrigerators", color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
 ];
 
 const featuredBanners = [

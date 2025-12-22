@@ -9,7 +9,7 @@ import { Filter, IndianRupee } from "lucide-react";
 const categories = [
   { name: "Electronics", slug: "electronics" },
   { name: "TVs & Appliances", slug: "tv" },
-  { name: "AC", slug: "AC" },
+  { name: "AC", slug: "ac" },
   { name: "Coolers", slug: "coolers" },
   { name: "Fans", slug: "fan" },
   { name: "Wires & Cables", slug: "wires & cables" },
