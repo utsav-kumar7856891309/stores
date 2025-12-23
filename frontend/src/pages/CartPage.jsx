@@ -16,21 +16,20 @@ const CartPage = () => {
   const { cart } = useCartStore();
 
   return (
-    
     <div className="bg-slate-100 dark:bg-slate-950 pt-28">
-      <div className="mx-auto max-w-7xl px-4">
+      <div className="px-4 mx-auto max-w-7xl">
         <motion.h1
-          className="text-3xl md:text-4xl font-bold mb-8 text-slate-900 dark:text-white"
+          className="mb-8 text-3xl font-bold md:text-4xl text-slate-900 dark:text-white"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
         >
           Your Shopping Cart
         </motion.h1>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* CART ITEMS */}
           <motion.div
-            className="lg:col-span-2 space-y-6"
+            className="space-y-6 lg:col-span-2"
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -39,12 +38,28 @@ const CartPage = () => {
               <EmptyCartUI />
             ) : (
               <>
+                <div className="flex items-center justify-between mb-4">
+                  <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    Cart Items ({cart.length})
+                  </h2>
+                  <div className="flex gap-4">
+                    <button
+                      onClick={() => useCartStore.getState().clearCart()}
+                      className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+                    >
+                      Clear Cart
+                    </button>
+                    <Link
+                      to="/"
+                      className="text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
+                    >
+                      Continue Shopping
+                    </Link>
+                  </div>
+                </div>
+
                 <div
-                  className="
-                    bg-white dark:bg-slate-900
-                    border border-slate-200 dark:border-slate-800
-                    rounded-2xl shadow-sm p-6 space-y-6
-                  "
+                  className="p-6 space-y-6 bg-white border shadow-sm  dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-2xl"
                 >
                   {cart.map((item) => (
                     <CartItem key={item._id} item={item} />
@@ -67,9 +82,6 @@ const CartPage = () => {
               <OrderSummary />
               <GiftCouponCard />
               <ShippingProgress currentStep={1} />
-              {/* <LoyaltyPointsCard points={180} /> */}
-              {/* <SecureCheckoutBadges /> */}
-              {/* <InvoicePreview order={{ id: "ORD123", total: 2499 }} /> */}
             </motion.div>
           )}
         </div>
@@ -82,30 +94,20 @@ export default CartPage;
 
 const EmptyCartUI = () => (
   <motion.div
-    className="
-      bg-white dark:bg-slate-900
-      border border-slate-200 dark:border-slate-800
-      rounded-xl shadow-sm
-      flex flex-col items-center text-center
-      py-14 px-6
-    "
+    className="flex flex-col items-center px-6 text-center bg-white border shadow-sm  dark:bg-slate-900 border-slate-200 dark:border-slate-800 rounded-xl py-14"
     initial={{ opacity: 0, y: 16 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.4, ease: "easeOut" }}
   >
-    <div className="
-      mb-4
-      p-4 rounded-full
-      bg-slate-100 dark:bg-slate-800
-    ">
-      <ShoppingCart className="h-12 w-12 text-slate-400" />
+    <div className="p-4 mb-4 rounded-full  bg-slate-100 dark:bg-slate-800">
+      <ShoppingCart className="w-12 h-12 text-slate-400" />
     </div>
 
     <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
       Your cart is empty
     </h3>
 
-    <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 max-w-xs">
+    <p className="max-w-xs mt-1 text-sm text-slate-500 dark:text-slate-400">
       Add items to your cart to continue shopping.
     </p>
 
@@ -123,5 +125,3 @@ const EmptyCartUI = () => (
     </Link>
   </motion.div>
 );
-
-
